@@ -77,20 +77,6 @@ npm install
 # 4. Start the app
 npm start
 ```
-
----
-
-## 📸 Screenshots
-
-_(Add your screenshots here! Make sure to use Privacy Mode when taking them!)_
-
-```markdown
-<!-- Replace these placeholders with actual image links once you upload them -->
-
-![Detect Browsers View](docs/detect-view.png)
-![Backup Progress](docs/backup-view.png)
-```
-
 ---
 
 ## 🔒 Security & Encryption
@@ -129,3 +115,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
   <b>Built with ❤️ by <a href="https://github.com/alvadyzaa">Alvadyza</a></b>
 </div>
+
