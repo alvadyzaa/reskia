@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reskia - AIO Browser Backup Tools</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- ─── SIDEBAR ─────────────────────────── -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <svg class="logo-svg" width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <defs>
+            <linearGradient id="logoGrad" x1="0" y1="0" x2="36" y2="36">
+              <stop offset="0%" stop-color="#58a6ff"/>
+              <stop offset="100%" stop-color="#bc8cff"/>
+            </linearGradient>
+          </defs>
+          <path d="M18 2L4 8v10c0 9.4 5.96 18.2 14 20 8.04-1.8 14-10.6 14-20V8L18 2z" fill="url(#logoGrad)" opacity="0.15" stroke="url(#logoGrad)" stroke-width="1.5"/>
+          <path d="M18 8L10 12v6c0 5.6 3.2 10.8 8 12 4.8-1.2 8-6.4 8-12v-6L18 8z" fill="url(#logoGrad)" opacity="0.35"/>
+          <path d="M16 18l-2-2-1.5 1.5L16 21l6-6-1.5-1.5L16 18z" fill="white"/>
+        </svg>
+        <div class="logo-text">
+          <span class="logo-title">Reskia</span>
+          <span class="logo-subtitle">AIO Browser Backup Tools</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="nav-btn active" data-panel="detect">
+          <svg class="nav-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+          </svg>
+          Detect & Preview
+        </button>
+        <button class="nav-btn" data-panel="backup">
+          <svg class="nav-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Backup
+        </button>
+        <button class="nav-btn" data-panel="restore">
+          <svg class="nav-svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+          Restore
+        </button>
+      </nav>
+      <div class="sidebar-info">
+        <button class="btn btn-small btn-privacy" id="btnPrivacy" title="Toggle Privacy Mode — blur personal info for screenshots">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+          <span id="privacyLabel">Privacy Mode</span>
+        </button>
+        <div class="sid-display">
+          <span class="label">CURRENT SID</span>
+          <span class="value privacy-blur" id="currentSidDisplay">Loading...</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ─── MAIN CONTENT ────────────────────── -->
+    <main class="main-content">
+
+      <!-- DETECT & PREVIEW PANEL -->
+      <section class="panel active" id="panel-detect">
+        <div class="panel-header">
+          <h2>
+            <svg class="header-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            Detect & Preview Browser Profiles
+          </h2>
+          <p class="subtitle">Scan your system for installed browsers and their profiles.</p>
+        </div>
+        <div class="panel-actions">
+          <button class="btn btn-primary" id="btnDetect">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Detect Browsers
+          </button>
+          <button class="btn btn-secondary" id="btnScanAll" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.66 0 3-4.03 3-9s-1.34-9-3-9m0 18c-1.66 0-3-4.03-3-9s1.34-9 3-9"/></svg>
+            Scan All Browsers
+          </button>
+        </div>
+
+        <div class="detected-browsers" id="detectedBrowsers"></div>
+
+        <!-- Live Search -->
+        <div class="search-container" id="searchContainer" style="display:none;">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="liveSearch" placeholder="Search profiles by name, email, folder...">
+        </div>
+
+        <div class="profile-table-container" id="profileTableContainer" style="display:none;">
+          <div class="table-controls">
+            <label class="checkbox-label">
+              <input type="checkbox" id="selectAll"> Select All
+            </label>
+            <span class="profile-count" id="profileCount">0 profiles</span>
+          </div>
+          <div class="table-wrapper">
+            <table class="profile-table" id="profileTable">
+              <thead>
+                <tr>
+                  <th><input type="checkbox" id="selectAllHead"></th>
+                  <th>Browser</th>
+                  <th>Profile Name</th>
+                  <th>Folder</th>
+                  <th>Account</th>
+                  <th>Last Used</th>
+                  <th>SID</th>
+                </tr>
+              </thead>
+              <tbody id="profileTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- BACKUP PANEL -->
+      <section class="panel" id="panel-backup">
+        <div class="panel-header">
+          <h2>
+            <svg class="header-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Selective Profile Backup
+          </h2>
+          <p class="subtitle">Backup only the profiles you need.</p>
+        </div>
+
+        <div class="backup-config">
+          <div class="config-row">
+            <label>Backup Location</label>
+            <div class="input-group">
+              <input type="text" id="backupPath" placeholder="Select backup folder..." readonly>
+              <button class="btn btn-small" id="btnBrowseBackup">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                Browse
+              </button>
+            </div>
+          </div>
+
+          <div class="config-row">
+            <label class="toggle-label">
+              <input type="checkbox" id="enableEncryption">
+              <span class="toggle-switch"></span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Encrypt Backup (AES-256)
+            </label>
+          </div>
+
+          <div class="config-row" id="passwordRow" style="display:none;">
+            <label>Encryption Password</label>
+            <div class="input-group">
+              <input type="password" id="encryptionPassword" placeholder="Enter encryption password...">
+              <button class="btn btn-small" id="btnTogglePassword" title="Show/Hide">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <label>Confirm Password</label>
+            <div class="input-group">
+              <input type="password" id="encryptionPasswordConfirm" placeholder="Confirm password...">
+            </div>
+          </div>
+
+          <div class="selected-profiles-summary" id="backupProfilesSummary">
+            <p>No profiles selected. Go to <strong>Detect & Preview</strong> first.</p>
+          </div>
+
+          <button class="btn btn-primary btn-large" id="btnStartBackup" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            Start Backup
+          </button>
+        </div>
+
+        <div class="progress-section" id="backupProgress" style="display:none;">
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="backupProgressBar"></div>
+          </div>
+          <div class="progress-log" id="backupLog"></div>
+        </div>
+      </section>
+
+      <!-- RESTORE PANEL -->
+      <section class="panel" id="panel-restore">
+        <div class="panel-header">
+          <h2>
+            <svg class="header-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Selective Profile Restore
+          </h2>
+          <p class="subtitle">Restore individual profiles from a backup.</p>
+        </div>
+
+        <div class="restore-config">
+          <div class="config-row">
+            <label>Backup Source</label>
+            <div class="input-group">
+              <input type="text" id="restoreSource" placeholder="Select backup file or folder..." readonly>
+              <button class="btn btn-small" id="btnBrowseRestoreFile">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                .zip / .enc
+              </button>
+              <button class="btn btn-small" id="btnBrowseRestoreFolder">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                Folder
+              </button>
+              <button class="btn btn-small btn-accent" id="btnRefreshRestore" title="Refresh / Re-scan" style="display:none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="config-row" id="restorePasswordRow" style="display:none;">
+            <label>Decryption Password</label>
+            <div class="input-group">
+              <input type="password" id="restorePassword" placeholder="Enter decryption password...">
+              <button class="btn btn-small" id="btnLoadEncrypted">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></svg>
+                Decrypt & Load
+              </button>
+            </div>
+          </div>
+
+          <div class="config-row">
+            <label>Restore Mode</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="restoreMode" value="same" checked>
+                Same Windows User
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="restoreMode" value="migration">
+                Different Windows User (Migration Mode)
+              </label>
+            </div>
+          </div>
+
+          <div class="migration-warning" id="migrationWarning" style="display:none;">
+            <div class="warning-box">
+              ⚠️ <strong>Migration Mode Warning</strong><br>
+              Migration Mode may cause login decryption failure if DPAPI keys cannot be matched.
+            </div>
+          </div>
+
+          <div class="config-row">
+            <label>Profile Conflict Mode</label>
+            <div class="radio-group">
+              <label class="radio-label">
+                <input type="radio" name="overwriteMode" value="replace" checked>
+                Replace Existing Profile
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="overwriteMode" value="new">
+                Restore As New Profile
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="overwriteMode" value="cancel">
+                Skip If Exists
+              </label>
+            </div>
+          </div>
+
+          <div class="restore-status" id="restoreStatus" style="display:none;">
+            <div class="status-badges">
+              <span class="badge" id="sidBadge">SID: --</span>
+              <span class="badge" id="integrityBadge">Integrity: --</span>
+            </div>
+          </div>
+
+          <div class="profile-table-container" id="restoreProfilesContainer" style="display:none;">
+            <div class="table-controls">
+              <label class="checkbox-label">
+                <input type="checkbox" id="restoreSelectAll"> Select All
+              </label>
+              <span class="profile-count" id="restoreProfileCount">0 profiles</span>
+            </div>
+            <div class="table-wrapper">
+              <table class="profile-table">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" id="restoreSelectAllHead"></th>
+                    <th>Browser</th>
+                    <th>Profile / Folder</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="restoreProfileTableBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-large btn-restore" id="btnStartRestore" disabled>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Start Restore
+          </button>
+        </div>
+
+        <!-- Safety confirmation modal -->
+        <div class="modal-overlay" id="restoreSafetyModal" style="display:none;">
+          <div class="modal">
+            <div class="modal-header">
+              <h3>⚠️ Restore Safety Confirmation</h3>
+            </div>
+            <div class="modal-body">
+              <p>This restore will <strong>overwrite browser profile data</strong>.</p>
+              <p>Incorrect restore may <strong>log out all sessions</strong>.</p>
+              <div class="warning-box warning-red" style="margin:8px 0;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px;"><path d="M18.36 6.64A9 9 0 1 1 5.64 6.64"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+                <strong>All browsers will be force-closed</strong> before restoring.
+              </div>
+              <div class="sid-mismatch-warning" id="sidMismatchWarning" style="display:none;">
+                <div class="warning-box warning-red">
+                  🔴 <strong>SID Mismatch Detected!</strong><br>
+                  Restoring login sessions may fail due to DPAPI encryption.
+                </div>
+              </div>
+              <p class="confirm-instruction">Type <strong>RESTORE</strong> below to confirm:</p>
+              <input type="text" id="restoreConfirmInput" placeholder="Type RESTORE" autocomplete="off">
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-secondary" id="btnCancelRestore">Cancel</button>
+              <button class="btn btn-danger" id="btnConfirmRestore" disabled>Confirm Restore</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-section" id="restoreProgress" style="display:none;">
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="restoreProgressBar"></div>
+          </div>
+          <div class="progress-log" id="restoreLog"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Browser Close Confirmation Modal -->
+  <div class="modal-overlay" id="browserCloseModal" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:6px;"><path d="M18.36 6.64A9 9 0 1 1 5.64 6.64"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+          Close All Browsers
+        </h3>
+      </div>
+      <div class="modal-body">
+        <p>To perform this operation, <strong>all selected browsers will be force-closed</strong>.</p>
+        <p>Make sure you have saved all your work in the browser before continuing.</p>
+        <div class="warning-box" style="margin-top:8px;">
+          ⚠️ Any unsaved tabs, forms, or downloads will be lost.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnCancelBrowserClose">Cancel</button>
+        <button class="btn btn-danger" id="btnConfirmBrowserClose">Close Browsers & Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
